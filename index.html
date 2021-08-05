@@ -413,6 +413,15 @@ if(event.data=="close") {
 }
 },false);
 
+	window.addEventListener('keydown', function(e){
+	console.log(e)
+	if(e.keyCode===13){
+	close_button.click();
+	startButton();    
+	}
+	});  
+	
+		
 
 /*
 window.onload=function(){
