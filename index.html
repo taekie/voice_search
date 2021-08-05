@@ -372,7 +372,7 @@ function do_search(keyword){
     var tok=keyword.match(/(.+) (열기|열어)/);
     if(tok) {
       keyword=tok[1];
-      url="https://duckduckgo.com/?q=!"+encodeURI(keyword);
+      url="https://duckduckgo.com/?q=!ducky+"+encodeURI(keyword);
     }
 
       //document.location=url;
@@ -388,16 +388,6 @@ function do_search(keyword){
 $(function(){
   if(self==top) startButton();
 
-
-$( "body" ).keydown(function( e ) {
-  var c = String.fromCharCode(e.which);
-  if ( c == " ") {
-   event.preventDefault();
-   if($("input[value='ko-KR']").prop("checked")) $("input[value='en-US']").click();
-   else $("input[value='ko-KR']").click();
-
-  }
-});
 });
 
 window.addEventListener('message',function(event) {
@@ -413,13 +403,21 @@ if(event.data=="close") {
 }
 },false);
 
-	window.addEventListener('keydown', function(e){
-	console.log(e)
-	if(e.keyCode===13){
-	close_button.click();
-	startButton();    
-	}
-	});  
+window.addEventListener('keydown', function(e){
+console.log(e)
+if(e.keyCode===13){
+close_button.click();
+startButton();    
+}
+
+if ( e.key == " ") {
+   event.preventDefault();
+   if($("input[value='ko-KR']").prop("checked")) $("input[value='en-US']").click();
+   else $("input[value='ko-KR']").click();
+
+}
+
+});  
 	
 		
 
