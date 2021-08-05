@@ -373,13 +373,13 @@ function do_search(keyword){
     if(tok) {
       keyword=tok[1];
       url="https://duckduckgo.com/?q=!"+encodeURI(keyword);
+    }
 
-    }else{
       //document.location=url;
       //full_preview(url);
       window.open(url,"_blank");
 
-    }
+    
 
 
 }
