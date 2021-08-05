@@ -353,7 +353,7 @@ function do_search(keyword){
     return;
   }
 
-    var url="https://www.youtube.com/results?search_query="+encodeURI(keyword);
+    var url="https://search.naver.com/search.naver?query="+encodeURI(keyword);
 
     var tok=keyword.match(/(.+) 취소/);
     if(tok) {
@@ -365,7 +365,7 @@ function do_search(keyword){
     var tok=keyword.match(/(.+) 노래/);
     if(tok) {
       keyword=tok[1];
-      url="http://search.bugs.co.kr/album?q="+encodeURI(keyword);
+      url="https://www.youtube.com/results?search_query="+encodeURI(keyword);
 
     }
 
