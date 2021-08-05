@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+<html manifest="voicesearch_manifest.php">
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="child-src http://searchredesign.com *;">
+
+<link rel="icon" href="https://lh3.googleusercontent.com/tAPT1aiR-YWP80qFTYX-RUxxskd7JopYHuFtcf0kUmC7H3S2FzUvPTRLil5YKNUxlpQ=w148">
+<title>Voice Search</title>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<style>
+  * {
+    font-family: Verdana, Arial, sans-serif;
+  }
+
+  .full_frame{
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	z-index:1000000 !important;
+}
+
+  a:link {
+    color:#000;
+    text-decoration: none;
+  }
+  a:visited {
+    color:#000;
+  }
+  a:hover {
+    color:#33F;
+  }
+  .button2 {
+    background: -webkit-linear-gradient(top,#008dfd 0,#0370ea 100%);
+    border: 1px solid #076bd2;
+    border-radius: 3px;
+    color: #fff;
+    display: none;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.3;
+    padding: 8px 25px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #076bd2;
+    letter-spacing: normal;
+  }
+  .center {
+    padding: 10px;
+    text-align: center;
+  }
+  .final {
+    color: black;
+    padding-right: 3px;
+  }
+  .interim {
+    color: gray;
+  }
+  .info {
+    font-size: 14px;
+    text-align: center;
+    color: #777;
+    display: none;
+  }
+  .right {
+    float: right;
+  }
+  .sidebyside {
+    display: inline-block;
+    width: 45%;
+    min-height: 40px;
+    text-align: left;
+    vertical-align: top;
+  }
+  #headline {
+    font-size: 40px;
+    font-weight: 300;
+  }
+  #info {
+    font-size: 20px;
+    text-align: center;
+    color: #777;
+    visibility: hidden;
+        margin-bottom: 1em;
+  }
+
+  body{
+    background:   #E6E5E1;
+  }
+  #results {
+      position: relative;
+      font-size: 25pt;
+      _font-weight: bold;
+      border: 1px solid #ddd;
+    padding: 30px 100px 0 50px;
+      text-align: center;
+      border-radius: 5px;
+      min-height: 50px;
+      margin: 30px;
+      background: white;
+      margin:30px auto;
+
+  }
+
+  #start_button {
+      position: absolute;
+  right: 0px;
+  top: 0px;
+
+    border: 0;
+    background-color:transparent;
+    padding: 0;
+  }
+
+  button:focus {
+  outline: none;
+}
+
+.button-group {
+    list-style: none;
+    margin: 0;
+    left: 0;
+    padding: 0;
+}
+
+button, .button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 0;
+    border-style: solid;
+    border-width: 0;
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    font-weight: normal;
+    line-height: normal;
+    margin: 0 0 1.25rem;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 1rem 2rem 1.0625rem 2rem;
+    padding: 0.5rem 1.5rem 0.7rem;
+    font-size: 1rem;
+    background-color: #ccc;
+    border-color: #bbb;
+    color: #FFFFFF;
+    height: 1rem;
+    transition: background-color 100ms ease-out;
+}
+
+input[data-toggle] {
+    display: none;
+}
+
+.button-group > * {
+    display: inline-block;
+    margin: 0 -3px;
+}
+
+.button-group > *:first-child > .button {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.button-group > *:last-child > .button {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+input[data-toggle]:checked + label, input[data-toggle]:checked + label:active {
+    background-color: #6FA8DC;
+}
+
+#start_img {
+    height: 100px;
+}
+
+#paper{
+  width: 800px;
+  margin:0 auto;
+text-align: center;
+}
+
+</style>
+
+
+
+<div id=paper>
+
+<div id="results">
+  <button id="start_button" onclick="startButton(event)">
+    <img id="start_img" src="mic_active.gif" alt="Start"></button>
+  <span id="final_span" class="final"></span>
+  <span id="interim_span" class="interim"></span>
+  <p>
+</div>
+
+<div id="info">
+  <p id="info_start"></p>
+  <p id="info_speak_now"></p>
+  <p id="info_no_speech">No speech was detected. You may need to adjust your
+    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+      microphone settings</a>.</p>
+  <p id="info_no_microphone" style="display:none">
+    No microphone was found. Ensure that a microphone is installed and that
+    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+    microphone settings</a> are configured correctly.</p>
+  <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
+  <p id="info_denied">Permission to use microphone was denied.</p>
+  <p id="info_blocked">Permission to use microphone is blocked. To change,
+    go to chrome://settings/contentExceptions#media-stream</p>
+  <p id="info_upgrade">Web Speech API is not supported by this browser.
+     Upgrade to <a href="//www.google.com/chrome">Chrome</a>
+     version 25 or later.</p>
+</div>
+
+
+
+<ul class=button-group>
+  <li>
+    <input type="radio" id="r1" name="lang" data-toggle="button" value="ko-KR" checked>
+    <label class="button" for="r1">한국어</label>
+  </li>
+  <li>
+    <input type="radio" id="r2" name="lang" data-toggle="button" value="en-US">
+    <label class="button" for="r2">English</label>
+  </li>
+</ul>
+
+
+</div>
+
+<script>
+
+
+
+
+showInfo('info_start');
+
+
+var create_email = false;
+var final_transcript = '';
+var recognizing = false;
+var ignore_onend;
+var start_timestamp;
+if (!('webkitSpeechRecognition' in window)) {
+  upgrade();
+} else {
+  start_button.style.display = 'inline-block';
+  var recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onstart = function() {
+    recognizing = true;
+    showInfo('info_speak_now');
+    start_img.src = 'mic_active.gif';
+  };
+
+  recognition.onerror = function(event) {
+    if (event.error == 'no-speech') {
+      start_img.src = 'no-mic.png';
+      showInfo('info_no_speech');
+      ignore_onend = true;
+    }
+    if (event.error == 'audio-capture') {
+      start_img.src = 'no-mic.png';
+      showInfo('info_no_microphone');
+      ignore_onend = true;
+    }
+    if (event.error == 'not-allowed') {
+      if (event.timeStamp - start_timestamp < 100) {
+        showInfo('info_blocked');
+      } else {
+        showInfo('info_denied');
+      }
+      ignore_onend = true;
+    }
+  };
+
+  recognition.onend = function() {
+    recognizing = false;
+    if (ignore_onend) {
+      return;
+    }
+    start_img.src = 'no-mic.png';
+    if (!final_transcript) {
+      showInfo('info_start');
+      return;
+    }
+    showInfo('');
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+      var range = document.createRange();
+      range.selectNode(document.getElementById('final_span'));
+      window.getSelection().addRange(range);
+    }
+  };
+
+  recognition.onresult = function(event) {
+    var interim_transcript = '';
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        final_transcript += event.results[i][0].transcript;
+      } else {
+        interim_transcript += event.results[i][0].transcript;
+      }
+    }
+    final_transcript = capitalize(final_transcript);
+    final_span.innerHTML = linebreak(final_transcript);
+    interim_span.innerHTML = linebreak(interim_transcript);
+
+
+    if(self!=top){
+       window.parent.postMessage({"final":final_transcript,"interim":interim_transcript},"http://searchredesign.com");
+    }
+
+    if (final_transcript || interim_transcript) {
+      //showButtons('inline-block');
+    }
+
+    if (final_transcript){
+
+       recognizing = false;
+    recognition.stop();
+     //window.open("http://searchredesign.com/#"+encodeURI(final_transcript),"_blank");
+     var keyword=final_span.innerHTML;
+      do_search(final_transcript);
+     final_transcript="";
+    }else if(interim_transcript){
+      clearTimeout(timer);
+      timer=setTimeout(gointerim,1500)
+
+    }
+  };
+}
+
+var timer;
+function gointerim(){
+  //var keyword=$("#interim_span").text();
+  var keyword=interim_span.innerHTML;
+  //alert(interim_transcript)
+  //do_search(interim_transcript);
+
+}
+
+function do_search(keyword){
+  //window.alert(keyword);
+  //return;
+  if(self!=top){
+    return;
+  }
+
+    var url="http://searchredesign.com/lazysearch/#"+encodeURI(keyword);
+
+    var tok=keyword.match(/(.+) 취소/);
+    if(tok) {
+      recognition.stop();
+      timer=setTimeout(startButton,1000);
+      return;
+    }
+
+    var tok=keyword.match(/(.+) 노래/);
+    if(tok) {
+      keyword=tok[1];
+      url="http://search.bugs.co.kr/album?q="+encodeURI(keyword);
+
+    }
+
+    var tok=keyword.match(/(.+) (열기|열어)/);
+    if(tok) {
+      keyword=tok[1];
+      url="http://www.google.com/search?ie=UTF-8&oe=UTF-8&sourceid=navclient&gfns=1&q="+encodeURI(keyword);
+
+      url="https://www.googleapis.com/customsearch/v1?key=AIzaSyAlH9GFuB3DcPYskzOip9c1KzzxoUd76Zg&cx=005674220268235399096:okh1g5elt3e&q="+encodeURI(keyword);
+
+      $.get(url,function(data){
+        if(data&&data.items){
+          var item=data.items[0];
+          var url=item.formattedUrl;
+          if(!url.match("http")) url="http://"+url;
+          //document.location=url;
+          window.open(url,"_blank");
+        }
+
+      });
+      return;
+
+    }else{
+      //document.location=url;
+      //full_preview(url);
+      window.open(url,"_blank");
+
+    }
+
+
+}
+
+
+$(function(){
+  if(self==top) startButton();
+
+
+$( "body" ).keydown(function( e ) {
+  var c = String.fromCharCode(e.which);
+  if ( c == " ") {
+   event.preventDefault();
+   if($("input[value='ko-KR']").prop("checked")) $("input[value='en-US']").click();
+   else $("input[value='ko-KR']").click();
+
+  }
+});
+});
+
+window.addEventListener('message',function(event) {
+	if(event.origin !== 'http://searchredesign.com') return;
+  console.log(event.data);
+	if(event.data=="start") {
+    close_button.click();
+    startButton();
+  }
+if(event.data=="stop") recognition.stop();
+if(event.data=="close") {
+  close_button.click();
+}
+},false);
+
+
+/*
+window.onload=function(){
+  startButton();
+}
+*/
+
+function upgrade() {
+  start_button.style.visibility = 'hidden';
+  showInfo('info_upgrade');
+}
+
+var two_line = /\n\n/g;
+var one_line = /\n/g;
+function linebreak(s) {
+  return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+}
+
+var first_char = /\S/;
+function capitalize(s) {
+  return s.replace(first_char, function(m) { return m.toUpperCase(); });
+}
+
+
+
+
+$("input[name=lang]").change(function(){
+  if (recognizing) recognition.stop();
+  timer=setTimeout(startButton,500)
+});
+
+function startButton(event) {
+  if(!event) event=window.event;
+
+  if (recognizing) {
+    recognition.stop();
+    return;
+  }
+  final_transcript = '';
+  recognition.lang = $("input[name=lang]:checked").val();
+  recognition.start();
+  ignore_onend = false;
+  final_span.innerHTML = '';
+  interim_span.innerHTML = '';
+  start_img.src = 'no-mic.png';
+  showInfo('info_allow');
+  //showButtons('none');
+  start_timestamp = event.timeStamp;
+}
+
+function showInfo(s) {
+  if (s) {
+    for (var child = info.firstChild; child; child = child.nextSibling) {
+      if (child.style) {
+        child.style.display = child.id == s ? 'inline' : 'none';
+      }
+    }
+    info.style.visibility = 'visible';
+  } else {
+    info.style.visibility = 'hidden';
+  }
+}
+
+
+/* frame view */
+
+
+var close_button=$("<div id=close_button></div>");
+	close_button.click(function(){
+	  $("iframe.full_frame").remove();
+	});
+	$("body").prepend(close_button);
+
+
+
+function full_preview(url){
+  //if(idx) url=url+"&idx="+idx;
+	var frame=$("<iframe class=full_frame src="+url+"></iframe>");
+	frame.css("border","1px solid #ccc");
+	$("body").append(frame);
+	window.scrollTo(0,0);
+  frame.focus();
+}
+
+
+</script>
