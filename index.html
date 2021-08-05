@@ -374,18 +374,6 @@ function do_search(keyword){
       keyword=tok[1];
       url="https://duckduckgo.com/?q=!"+encodeURI(keyword);
 
-      $.get(url,function(data){
-        if(data&&data.items){
-          var item=data.items[0];
-          var url=item.formattedUrl;
-          if(!url.match("http")) url="http://"+url;
-          //document.location=url;
-          window.open(url,"_blank");
-        }
-
-      });
-      return;
-
     }else{
       //document.location=url;
       //full_preview(url);
