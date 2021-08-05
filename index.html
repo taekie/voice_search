@@ -369,6 +369,13 @@ function do_search(keyword){
 
     }
 
+var tok=keyword.match(/유투브/);
+    if(tok) {
+      keyword=keyword.replace("유투브","")
+      url="https://www.youtube.com/results?search_query="+encodeURI(keyword);
+
+    }
+
     var tok=keyword.match(/(.+) (열기|열어)/);
     if(tok) {
       keyword=tok[1];
