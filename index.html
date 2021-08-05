@@ -369,9 +369,9 @@ function do_search(keyword){
 
     }
 
-var tok=keyword.match(/유투브/);
+var tok=keyword.match(/유투브|유튜브/);
     if(tok) {
-      keyword=keyword.replace("유투브","")
+      keyword=keyword.replace(/유투브|유튜브/,"")
       url="https://www.youtube.com/results?search_query="+encodeURI(keyword);
 
     }
