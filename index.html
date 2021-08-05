@@ -315,7 +315,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
 
     if(self!=top){
-       window.parent.postMessage({"final":final_transcript,"interim":interim_transcript},"http://searchredesign.com");
+       window.parent.postMessage({"final":final_transcript,"interim":interim_transcript},"https://taekie.github.io");
     }
 
     if (final_transcript || interim_transcript) {
@@ -326,7 +326,6 @@ if (!('webkitSpeechRecognition' in window)) {
 
        recognizing = false;
     recognition.stop();
-     //window.open("http://searchredesign.com/#"+encodeURI(final_transcript),"_blank");
      var keyword=final_span.innerHTML;
       do_search(final_transcript);
      final_transcript="";
@@ -354,7 +353,7 @@ function do_search(keyword){
     return;
   }
 
-    var url="http://searchredesign.com/lazysearch/#"+encodeURI(keyword);
+    var url="https://www.youtube.com/results?search_query="+encodeURI(keyword);
 
     var tok=keyword.match(/(.+) 취소/);
     if(tok) {
