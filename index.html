@@ -372,9 +372,7 @@ function do_search(keyword){
     var tok=keyword.match(/(.+) (열기|열어)/);
     if(tok) {
       keyword=tok[1];
-      url="http://www.google.com/search?ie=UTF-8&oe=UTF-8&sourceid=navclient&gfns=1&q="+encodeURI(keyword);
-
-      url="https://www.googleapis.com/customsearch/v1?key=AIzaSyAlH9GFuB3DcPYskzOip9c1KzzxoUd76Zg&cx=005674220268235399096:okh1g5elt3e&q="+encodeURI(keyword);
+      url="https://duckduckgo.com/?q=!"+encodeURI(keyword);
 
       $.get(url,function(data){
         if(data&&data.items){
