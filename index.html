@@ -368,6 +368,13 @@ function do_search(keyword){
 
     }
 
+	    var tok=keyword.match(/(.+)지도/);
+    if(tok) {
+      keyword=tok[1];
+      url="https://map.kakao.com/?q="+encodeURI(keyword);
+
+    }
+	
 var tok=keyword.match(/유투브|유튜브/);
     if(tok) {
       keyword=keyword.replace(/유투브|유튜브/,"")
