@@ -353,7 +353,8 @@ function do_search(keyword){
   }
 	
 var url=window.localStorage.getItem('searchURL')
-if(!url) url="https://search.naver.com/search.naver?query="+encodeURI(keyword);
+if(!url) url="https://search.naver.com/search.naver?query="
+	url=url+encodeURI(keyword);
 
     var tok=keyword.match(/(.+) 취소/);
     if(tok) {
