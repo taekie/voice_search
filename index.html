@@ -351,8 +351,9 @@ function do_search(keyword){
   if(self!=top){
     return;
   }
-
-    var url="https://search.naver.com/search.naver?query="+encodeURI(keyword);
+	
+var url=window.localStorage.setItem('searchURL')
+if(!url) url="https://search.naver.com/search.naver?query="+encodeURI(keyword);
 
     var tok=keyword.match(/(.+) 취소/);
     if(tok) {
